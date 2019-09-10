@@ -40,8 +40,6 @@ def feature_extraction(directory):
         key = wav_file.split('/')[-3]
         feat_dict = {'label':key, 'feat':S}
         feat_file = wav_file.replace('.wav', '.fb64_p')
-        #feat_file = wav_file.replace('.wav', '.melspec128_p')
-        #feat_file = wav_file.replace('.wav', '.specAugment_p')
         print ([i], key, feat_file)
         with open(feat_file, 'wb') as f:
             pickle.dump(feat_dict, f)

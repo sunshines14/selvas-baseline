@@ -72,17 +72,11 @@ def read_test_feats_structure(directory):
 def test():
     train_dir = c.TRAIN_FEAT_DIR
     test_dir = c.TEST_FEAT_DIR
-    #train_data_DB = read_train_DB_structure(train_dir)
-    #test_data_DB = read_test_DB_structure(test_dir)
     train_DB = read_train_feats_structure(train_dir)
     test_DB = read_test_feats_structure(test_dir)
     return train_DB, test_DB
-    #return train_data_DB, test_data_DB
 
 if __name__ == '__main__':
     train_DB, test_DB = test()
     print (train_DB)
     print (test_DB)
-    #train_data_DB, test_data_DB = test()
-    #print (train_data_DB)
-    #print (test_data_DB)

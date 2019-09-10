@@ -1,4 +1,5 @@
 import torch.nn as nn
+import configure as c
 #from .utils import load_state_dict_from_url
 
 
@@ -101,7 +102,7 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet(nn.Module):
-    def __init__(self, block, layers, num_classes=1211, zero_init_residual=False,
+    def __init__(self, block, layers, num_classes=c.N_CLASSES, zero_init_residual=False,
                  groups=1, width_per_group=64, replace_stride_with_dilation=None,
                  norm_layer=None):
         super(ResNet, self).__init__()
