@@ -20,7 +20,7 @@ from collections import OrderedDict
 def load_model(use_cuda, log_dir, cp_num, embedding_size, n_classes):
     model = custom_model(embedding_size=embedding_size, num_classes=n_classes)
     if use_cuda:
-       model.cuda()
+        model.cuda()
     print('=> loading checkpoint')
     checkpoint = torch.load(log_dir + '/checkpoint_' + str(cp_num) + '.pth')
     #model.load_state_dict(checkpoint['state_dict'])
@@ -41,8 +41,7 @@ def get_test_DB(dataroot_dir):
 def get_embeddings(use_cuda, filename, model, test_frames):
     input, label = read_MFB(filename) 
     activation = 0 
-    
-    # ===== 1 =====
+
     tot_segments = math.ceil(len(input)/test_frames) 
     with torch.no_grad():
         for i in range(tot_segments):
@@ -140,6 +139,7 @@ def main():
     print ('EER: %f' % eer)
     print ('Threshold: %f' % thresh)
     print ('==============================')
+    
     # store result 
     #with open('result/y_array.p', 'wb') as f:
     #    pickle.dump(y_array, f)

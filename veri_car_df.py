@@ -38,7 +38,6 @@ def get_embeddings(use_cuda, filename, model, test_frames):
     input, label = read_MFB(filename) 
     activation = 0
     
-    # ===== 1 =====
     tot_segments = math.ceil(len(input)/test_frames)  
     with torch.no_grad():
         for i in range(tot_segments):
@@ -49,18 +48,6 @@ def get_embeddings(use_cuda, filename, model, test_frames):
                 temp_input = temp_input.cuda()
             temp_activation,_ = model(temp_input)
             activation += torch.sum(temp_activation, dim=0, keepdim=True)
-           
-    # ===== 2 =====
-    #with torch.no_grad():
-    #    transform = transforms.Compose([
-    #        TruncatedTestInputfromMFB(),
-    #        ToTensorTestInput()
-    #    ])
-    #    temp_input = transform(input)
-    #    if use_cuda:
-    #        temp_input = temp_input.cuda()
-    #    temp_activation,_ = model(temp_input)
-    #    activation += torch.sum(temp_activation, dim=0, keepdim=True)
 
     activation = l2_norm(activation, 1)                
     return activation
@@ -133,6 +120,7 @@ def main():
     print ('EER: %f' % eer)
     print ('Threshold: %f' % thresh)
     print ('==============================')
+    
     # store result 
     #with open('result/y_array.p', 'wb') as f:
     #    pickle.dump(y_array, f)

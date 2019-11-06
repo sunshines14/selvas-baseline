@@ -6,6 +6,8 @@ import os
 import pickle 
 import numpy as np
 import configure as c
+import math
+from DB_wav_reader import read_DB_structure
 
 
 def read_MFB(filename):
@@ -36,7 +38,7 @@ class TruncatedInputfromMFB(object):
         network_inputs = []
         num_frames = len(frames_features)
         win_size = c.NUM_WIN_SIZE
-       
+        
         # ===== 1 =====
         half_win_size = int(win_size/2)
         if num_frames - half_win_size < half_win_size:
@@ -46,8 +48,8 @@ class TruncatedInputfromMFB(object):
         for i in range(self.input_per_file):
             try:
                 j = random.randrange(half_win_size, num_frames - half_win_size)
-            except:
-                j = random.randrange(half_win_size, num_frames - (half_win_size - 1)) 
+            except: 
+                j = random.randrange(half_win_size, (num_frames - half_win_size)+1)
             if not j:
                 frames_slice = np.zeros(num_frames, c.FILTER_BANK, 'float64')
                 frames_slice[0:(frames_features.shape)[0]] = frames_features.shape
@@ -77,51 +79,20 @@ class TruncatedInputfromMFB(object):
         # ===== 4 =====
         #network_inputs.append(frames_features)
 
-        return np.array(network_inputs)
-
-class TruncatedTestInputfromMFB(object):
-    def __init__(self, input_per_file=1):
-        super(TruncatedTestInputfromMFB, self).__init__()
-        self.input_per_file = input_per_file
-    
-    def __call__(self, frames_features):
-        network_inputs = []
-        num_frames = len(frames_features)
-        win_size = c.TEST_FRAMES
-
-        # ===== 1 =====
-        #half_win_size = int(win_size/2)
-        #if num_frames - half_win_size < half_win_size:
-        #    while num_frames - half_win_size <= half_win_size:
-        #        frames_features = np.append(frames_features, frames_features[:num_frames,:], axis=0)
-        #        num_frames =  len(frames_features) 
-        #for i in range(self.input_per_file):
-        #    j = random.randrange(half_win_size, num_frames - half_win_size)
-        #    if not j:
-        #        frames_slice = np.zeros(num_frames, c.FILTER_BANK, 'float64')
-        #        frames_slice[0:(frames_features.shape)[0]] = frames_features.shape
-        #    else:
-        #        frames_slice = frames_features[j - half_win_size:j + half_win_size]
-        #    network_inputs.append(frames_slice)
-       
-        # ===== 2 =====
-        #for i in range(self.input_per_file):
-        #    fixed_frames_feature = np.zeros(shape=(win_size, c.FILTER_BANK))
-        #    for j in range(win_size):
-        #        fixed_frames_feature[j] = frames_features[abs(int(num_frames * ((j+1)/win_size))-1)] 
-        #    network_inputs.append(fixed_frames_feature)
-
-        # ===== 3 =====
-        #n = 0
-        #for i in range(self.input_per_file):
-        #    while num_frames > (300*n)+(win_size): 
-        #        frames_slice = frames_features[300*n:(300*n)+(win_size)]
-        #        network_inputs.append(frames_slice)
-        #        n = n+1
-
-        # ===== 4 =====
-        #network_inputs.append(frames_features)
-
+        # ===== 5 =====
+        #dim = c.FILTER_BANK
+        #tot_segments = math.ceil(num_frames/win_size)
+        #temp_input = torch.ones((win_size, dim)) 
+        #with torch.no_grad():
+        #    for i in range(tot_segments):
+        #        if num_frames > i*win_size+win_size:
+        #            temp = frames_features[i*win_size:i*win_size+win_size]
+        #            temp = torch.from_numpy(np.array(temp)).float() 
+        #            temp_input = torch.mul(temp_input,temp)
+        #    temp_input = np.asarray(temp_input)
+        #    temp_input = temp_input.reshape(1, win_size, dim)
+        #return temp_input
+        
         return np.array(network_inputs)
 
 class ToTensorInput(object):
@@ -204,7 +175,7 @@ class DataLoader(data.Dataset):
         label = self.spk_to_idx[label]
         label = torch.Tensor([label]).long()
         if self.transform:
-            feature = self.transform(feature) 
+            feature = self.transform(feature)
         return feature, label
     
     def __len__(self):
