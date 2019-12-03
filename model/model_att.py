@@ -28,7 +28,7 @@ class custom_model(nn.Module):
             self.pretrained = resnet.resnext101_32x8d(pretrained=False)
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
-        
+       
         self.fc0 = nn.Linear(1024, embedding_size) 
         self.bn0 = nn.BatchNorm1d(embedding_size)
         self.fc1 = nn.Linear(1024, embedding_size)

@@ -13,7 +13,6 @@ from DB_wav_reader import read_train_feats_structure, read_train_feats_structure
 from SR_Dataset import read_MFB, TruncatedInputfromMFB, ToTensorInput, ToTensorDevInput, DataLoader, collate_fn_variable, collate_fn_feat_padded
 from model.model import custom_model
 from utils.pytorchtools import EarlyStopping
-from tensorboardX import SummaryWriter
 
 
 def load_dataset(val_ratio):
