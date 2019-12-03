@@ -10,7 +10,7 @@ import numpy as np
 
 
 class custom_model(nn.Module):
-    def __init__(self, embedding_size, num_classes, backbone='resnet18'):
+    def __init__(self, embedding_size, num_classes, backbone='resnet34'):
         super(custom_model, self).__init__()
         self.backbone = backbone
         if backbone == 'resnet18':
